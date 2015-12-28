@@ -1,6 +1,8 @@
 defmodule Rumbl.UserController do
   use Rumbl.Web, :controller
-  plug :authenticate when action in [:index, :show]
+  import Rumbl.Auth
+  #This could be handled by the router instead. Unclear what the walkthrough will want me to do...
+  plug :authenticate_user when action in [:index, :show]
   alias Rumbl.User
 
   def new(conn, _params) do
@@ -31,14 +33,4 @@ defmodule Rumbl.UserController do
     end
   end
 
-  defp authenticate(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: page_path(conn, :index))
-      |> halt()
-    end
-  end
 end
